@@ -1,0 +1,261 @@
+/* BODY TOÀN TRANG */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #ffffff, #ffffff);
+    color: #333;
+}
+
+/* BANNER FULL WIDTH + FULL HEIGHT */
+.banner {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ẢNH TRONG BANNER - PHỦ TOÀN MÀN */
+.banner-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.6); /* Tối ảnh để chữ trắng nổi bật */
+}
+
+/* CHỮ VÀ NÚT NẰM GIỮA ẢNH */
+.banner-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    padding: 0 20px;
+}
+
+.banner-overlay h1 {
+    font-size: 3rem;
+    margin: 10px 0;
+    color: white;
+}
+
+.banner-overlay h2 {
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin-bottom: 30px;
+    color: #f0f0f0;
+}
+
+/* NÚT BẮT ĐẦU */
+.btn-start {
+    padding: 14px 30px;
+    font-size: 1.1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease;
+}
+
+.btn-start:hover {
+    background-color: #0056b3;
+}
+
+/* POPUP ĐĂNG NHẬP/ĐĂNG KÝ */
+.login-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-form {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.login-form h3 {
+    margin-top: 0;
+    color: #007bff;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.login-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #5ca0d5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.login-form button:hover {
+    background-color: #0056b3;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.close-btn:hover {
+    color: #000;
+}
+/* THANH TASKBAR */
+.taskbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 30px;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* TIÊU ĐỀ BÊN TRÁI */
+.taskbar h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #000000;
+}
+
+/* CÁC NÚT BÊN PHẢI */
+.taskbar-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.taskbar-buttons button {
+    background-color: transparent;
+    border: 2px solid rgb(0, 0, 0);
+    color: rgb(0, 0, 0);
+    padding: 8px 16px;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.taskbar-buttons button:hover {
+    background-color: rgb(104, 186, 244);
+    color: #245a94;
+    font-weight: bold;
+}
+.login-modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-form-wrapper {
+  background: rgb(0, 0, 0);
+  width: 90%;
+  max-width: 400px;
+  padding: 30px 20px;
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+}
+
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+}
+.close-btn:hover {
+  color: #000;
+}
+
+.tab-switcher {
+  display: flex;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tab {
+  flex: 1;
+  padding: 10px 0;
+  text-align: center;
+  background: #f1f1f1;
+  cursor: pointer;
+  font-weight: bold;
+  border: none;
+}
+
+.tab.active {
+  background: #007bff;
+  color: white;
+}
+
+.form-section h3 {
+  margin-top: 0;
+  color: #007bff;
+}
+
+.form-section input {
+  width: 100%;
+  padding: 6px 10px;       /* giảm padding: gọn hơn */
+  margin: 6px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;        /* chữ nhỏ hơn */
+  height: 34px;          
+  
+}
+
+.form-section button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>taskList - Hồ sơ cá nhân</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .profile-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+    }
+
+    .profile-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #667eea;
+    }
+
+    .profile-header h1 {
+        color: #333;
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+
+    .profile-header p {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .profile-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e0e0e0;
+    }
+
+    .profile-card h2 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+        border-bottom: 2px solid #667eea;
+        padding-bottom: 10px;
+    }
+
+    .profile-field {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .profile-field:last-child {
+        border-bottom: none;
+    }
+
+    .field-label {
+        font-weight: 600;
+        color: #555;
+        font-size: 1rem;
+    }
+
+    .field-value {
+        color: #333;
+        font-size: 1rem;
+    }
+
+    .session-info {
+        margin-top: 20px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border-left: 4px solid #667eea;
+    }
+
+    .session-info h4 {
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .session-info ul {
+        margin-left: 20px;
+    }
+
+    .session-info li {
+        margin-bottom: 8px;
+        color: #666;
+    }
+
+    .edit-section {
+        margin-bottom: 25px;
+    }
+
+    .edit-btn {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .edit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .back-btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .back-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .back-btn.logout {
+        background: linear-gradient(135deg, #dc3545, #c82333);
+        margin-left: 15px;
+    }
+
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+        background-color: white;
+        margin: 5% auto;
+        padding: 40px;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: slideIn 0.3s ease-out;
+        position: relative;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        position: absolute;
+        top: 15px;
+        right: 20px;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #333;
+    }
+
+    .modal h2 {
+        color: #333;
+        margin-bottom: 30px;
+        text-align: center;
+        font-size: 1.8rem;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #555;
+        font-weight: 600;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .modal-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 30px;
+    }
+
+    .btn-save {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cancel {
+        background: linear-gradient(135deg, #6c757d, #5a6268);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-save:hover,
+    .btn-cancel:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .flash-messages {
+        margin-bottom: 20px;
+    }
+
+    .flash-message {
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        font-weight: 500;
+    }
+
+    .flash-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .flash-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .flash-info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+    }
+
+    @media (max-width: 768px) {
+        .profile-container {
+            padding: 20px;
+            margin: 10px;
+        }
+        
+        .profile-header h1 {
+            font-size: 2rem;
+        }
+        
+        .modal-content {
+            margin: 10% auto;
+            padding: 30px 20px;
+        }
+        
+        .modal-buttons {
+            flex-direction: column;
+        }
+    }
+</style>
+</head>
+<body>
+<div class="profile-container">
+    <!-- Flash Messages -->
+    <div class="flash-messages" id="flashMessages" style="display: none;">
+        <div class="flash-message flash-success">
+            Cập nhật thông tin thành công!
+        </div>
+    </div>
+
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <h1>Hồ sơ cá nhân</h1>
+        <p>Thông tin chi tiết về tài khoản của bạn</p>
+    </div>
+
+    <!-- Profile Information -->
+    <div class="profile-card">
+        <h2>Thông tin cơ bản</h2>
+        <div class="profile-field">
+            <span class="field-label">Tên người dùng:</span>
+            <span class="field-value" id="displayUsername">johndoe123</span>
+        </div>
+        <div class="profile-field">
+            <span class="field-label">Email:</span>
+            <span class="field-value" id="displayEmail">johndoe@example.com</span>
+        </div>
+        <div class="profile-field">
+            <span class="field-label">ID người dùng:</span>
+            <span class="field-value" id="displayUserId">USER001</span>
+        </div>
+    </div>
+
+    <!-- Edit Button Section -->
+    <div class="edit-section">
+        <button class="edit-btn" id="editBtn">✏️ Sửa đổi thông tin</button>
+    </div>
+
+    <!-- Session Information -->
+    <div class="profile-card">
+        <h2>Thông tin phiên đăng nhập</h2>
+        <div class="profile-field">
+            <span class="field-label">Thời gian đăng nhập:</span>
+            <span class="field-value">21/06/2025 09:30:15</span>
+        </div>
+        <div class="profile-field">
+            <span class="field-label">Hoạt động cuối cùng:</span>
+            <span class="field-value">21/06/2025 14:25:42</span>
+        </div>
+        <div class="session-info">
+            <h4>Lưu ý về phiên đăng nhập:</h4>
+            <ul>
+                <li>Phiên đăng nhập sẽ tự động hết hạn sau 24 giờ</li>
+                <li>Thời gian hoạt động được cập nhật tự động</li>
+                <li>Bạn có thể đăng xuất bất cứ lúc nào</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div style="text-align: center;">
+        <a href="/home" class="back-btn">🏠 Quay lại trang chủ</a>
+        <a href="/logout" class="back-btn logout">🚪 Đăng xuất</a>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h2>✏️ Cập nhật thông tin</h2>
+        <form id="updateForm">
+            <div class="form-group">
+                <label for="username">Tên người dùng:</label>
+                <input type="text" id="username" name="username" value="johndoe123" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="johndoe@example.com" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Mật khẩu mới (để trống nếu không đổi):</label>
+                <input type="password" id="password" name="password" placeholder="Nhập mật khẩu mới...">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Xác nhận mật khẩu:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu...">
+            </div>
+            <div class="modal-buttons">
+                <button type="submit" class="btn-save">💾 Lưu thay đổi</button>
+                <button type="button" class="btn-cancel" id="cancelBtn">❌ Hủy</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Modal functionality
+    const modal = document.getElementById('editModal');
+    const editBtn = document.getElementById('editBtn');
+    const closeModal = document.getElementById('closeModal');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const updateForm = document.getElementById('updateForm');
+    const flashMessages = document.getElementById('flashMessages');
+
+    // Open modal
+    editBtn.onclick = function() {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+
+    // Close modal functions
+    function closeModalFunction() {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restore scrolling
+        // Reset form
+        updateForm.reset();
+        document.getElementById('username').value = document.getElementById('displayUsername').textContent;
+        document.getElementById('email').value = document.getElementById('displayEmail').textContent;
+    }
+
+    closeModal.onclick = closeModalFunction;
+    cancelBtn.onclick = closeModalFunction;
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            closeModalFunction();
+        }
+    }
+
+    // Form submission
+    updateForm.onsubmit = function(e) {
+        e.preventDefault();
+        
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        // Validation
+        if (password && password !== confirmPassword) {
+            alert('❌ Mật khẩu xác nhận không khớp!');
+            return;
+        }
+
+        if (username.length < 3) {
+            alert('❌ Tên người dùng phải có ít nhất 3 ký tự!');
+            return;
+        }
+
+        // Simulate form submission (replace with actual API call)
+        setTimeout(() => {
+            // Update display values
+            document.getElementById('displayUsername').textContent = username;
+            document.getElementById('displayEmail').textContent = email;
+            
+            // Show success message
+            flashMessages.style.display = 'block';
+            setTimeout(() => {
+                flashMessages.style.display = 'none';
+            }, 3000);
+            
+            // Close modal
+            closeModalFunction();
+            
+            // Scroll to top to show success message
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 500);
+    }
+
+    // Add some interactive effects
+    document.querySelectorAll('.edit-btn, .back-btn').forEach(btn => {
+        btn.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px) scale(1.02)';
+        });
+        
+        btn.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+
+    // Add typing effect for form inputs
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.style.borderColor = '#667eea';
+            this.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.style.borderColor = '#e0e0e0';
+            this.style.boxShadow = 'none';
+        });
+    });
+</script>
+</body>
+</html>

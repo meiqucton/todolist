@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>taskList - Task Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mainPage.css') }}">
+    <style>
+        .flash-messages {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10001;
+            max-width: 400px;
+        }
+        .flash-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .flash-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .flash-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .flash-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .flash-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Thanh taskbar -->
+    <div class="taskbar"> 
+        <h1>taskList</h1>
+        <div class="taskbar-buttons">
+            <button id="Home">Trang Chính</button>
+            <button id="About">Giới Thiệu</button>
+            <button id="singer">Cá Nhân</button>
+            <button id="Team">Làm việc nhóm</button>
+            <button id="Contact">Liên Hệ</button>
+        </div>
+    </div>
+
+    <!-- Nội dung cuộn tới -->
+    <div class="container">
+    <section id="home">
+    <div class="banner">
+        <img src="{{ url_for('static', filename='images/116e168a-fd03-498e-a88a-a763c522e4bc.png') }}" alt="taskList Banner" class="banner-image">
+        <div class="banner-overlay">
+            <h1>Welcome to <span class="brand">taskList</span></h1>
+            <h2>The ultimate tool for personal task management and team collaboration.</h2>
+            <button class="btn-start" onclick="showLogin()">Bắt đầu ngay</button>
+        </div>
+    </div>
+
+<div id="login-modal" class="login-modal">
+  <div class="login-form-wrapper">
+    <span class="close-btn" onclick="hideLogin()">×</span>
+
+    <!-- Nút chuyển -->
+    <div class="tab-switcher">
+      <button id="btn-login" class="tab active" onclick="showLoginForm()">Đăng Nhập</button>
+      <button id="btn-register" class="tab" onclick="showRegisterForm()">Đăng Ký</button>
+    </div>
+
+    <!-- Form đăng nhập -->
+    <div id="form-login" class="form-section">
+      <h3>Đăng Nhập</h3>
+      <form action="/login" method="post">
+        <input type="text" name="email" placeholder="Tên đăng nhập" required>
+        <input type="password" name="password" placeholder="Mật khẩu" required>
+        <button type="submit">Đăng Nhập</button>
+      </form>
+    </div>
+
+    <!-- Form đăng ký -->
+    <div id="form-register" class="form-section" style="display: none;">
+      <h3>Đăng Ký</h3>
+      <form action="/register" method="post">
+        <input type="text" name="user_name" placeholder="Tên đăng nhập" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Mật khẩu" required>
+        <button type="submit">Đăng Ký</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+</section>
+
+</section>
+
+    </section>
+
+
+        <section id="about">
+            <h2>Giới Thiệu</h2>
+            <p><strong>taskList</strong> là một ứng dụng quản lý công việc trực tuyến giúp bạn:</p>
+            <ul>
+                <li>Lập danh sách công việc cần làm</li>
+                <li>Giao nhiệm vụ cho thành viên trong nhóm</li>
+                <li>Theo dõi tiến độ và mức độ hoàn thành</li>
+                <li>Thống kê hiệu suất làm việc cá nhân và nhóm</li>
+            </ul>
+            <p>Giao diện đơn giản – hiệu quả – hỗ trợ làm việc từ xa và hợp tác nhóm dễ dàng.</p>
+        </section>
+
+        <section id="personal">
+            <h2>Cá Nhân</h2>
+            <p>Trong khu vực cá nhân, bạn có thể:</p>
+            <ul>
+                <li>Thêm, chỉnh sửa và xóa task cá nhân</li>
+                <li>Thiết lập deadline, ưu tiên và nhắc nhở</li>
+                <li>Xem tiến độ cá nhân theo biểu đồ hoặc danh sách</li>
+            </ul>
+            <p>Hệ thống điểm thưởng sẽ giúp bạn có thêm động lực hoàn thành công việc mỗi ngày.</p>
+        </section>
+
+        <section id="team">
+            <h2>Làm Việc Nhóm</h2>
+            <p>Phần làm việc nhóm hỗ trợ:</p>
+            <ul>
+                <li>Giao nhiệm vụ cụ thể cho từng thành viên</li>
+                <li>Bảng tổng quan giúp trưởng nhóm theo dõi toàn bộ tiến độ</li>
+                <li>Hệ thống chấm điểm nhóm – tạo môi trường thi đua và tăng hiệu quả</li>
+                <li>Bình luận, trao đổi trực tiếp dưới mỗi nhiệm vụ</li>
+                <li>Tạo ra 1 bảng thang đo hiệu suất làm việc của từng thành viên</li>
+            </ul>
+            <p>taskList giúp tăng cường sự phối hợp và nâng cao năng suất nhóm.</p>
+        </section>
+
+        <section id="contact">
+            <h2>Liên Hệ</h2>
+            <p>Nếu bạn có bất kỳ góp ý, câu hỏi hay cần hỗ trợ, vui lòng liên hệ:</p>
+            <ul>
+                <li>Email: support@taskList.com</li>
+                <li>Hotline: 0123 456 789</li>
+                <li>Facebook: fb.com/taskListapp</li>
+            </ul>
+            <p>Đội ngũ chúng tôi luôn sẵn sàng hỗ trợ bạn 24/7.</p>
+        </section>
+    </div>
+    <script src="{{ url_for('static', filename='js/mainPage.js') }}"></script>
+ 
+</body>
+</html>
