@@ -2,8 +2,19 @@ from model.user import User_register_model, login_user_model,update_user
 from flask import session
 import uuid
 from datetime import datetime
+
+from model.user import ( create_jwt_token, get_user_by_id, check_email_model, get_user_by_email)
+from model.team import (get_team_by_id)
 from model.member import (
-    join_team,
+    check_role,
+    get_member
+)
+from controller.email import (
+    send_email_late_task
+    ,
+)   
+from controller.task import(
+    count_task_by_status
 )
 
 def User_register_function(user_name, email, password):
@@ -12,8 +23,11 @@ def User_register_function(user_name, email, password):
     total_point = 0
     if len(password) < 8:
         return {"success": False, "error": "Password must be at least 8 characters long"}
-    new_user = User_register_model(user_name=user_name, email=email, pass_user=password, total_point = total_point)
-    return new_user
+    if check_email_model(email):
+        return {"success": False, "error": "Gmail này đã được sử dụng rồi"}
+    else: 
+        new_user = User_register_model(user_name=user_name, email=email, pass_user=password, total_point = total_point)
+        return new_user
 
 def login_user_function(email, password):
     if not email or not password:
@@ -24,16 +38,18 @@ def login_user_function(email, password):
             "success": True, 
             "user_id": user["user_id"],
             "user_name": user["user_name"],
-            "email": user["email"]
+            "email": user["email"],
+            "total_point": user["total_point"]
         }
     return {"success": False, "error": user.get("error", "Login failed")}
 
-def create_user_session(user_id, user_name, email):
+def create_user_session(user_id, user_name, email, total_point):
     """Tạo session cho user với thông tin cần thiết"""
     session.permanent = True  
     session['user_id'] = user_id
     session['user_name'] = user_name
     session['email'] = email
+    session['total_point'] = total_point
     session['session_id'] = str(uuid.uuid4()) 
     session['login_time'] = datetime.now().isoformat()
     session['last_activity'] = datetime.now().isoformat()
@@ -62,15 +78,16 @@ def get_current_user_info():
             'user_id': session.get('user_id'),
             'user_name': session.get('user_name'),
             'email': session.get('email'),
+            'total_point': session.get('total_point'),
             'login_time': session.get('login_time'),
             'last_activity': session.get('last_activity')
         }
     return None
 def update_user_controller(user_name, passwork):
-    if user_name:  # nếu user_name không phải None hoặc chuỗi rỗng
+    if user_name: 
         user_name = user_name
 
-    if passwork:  # nếu passwork không phải None hoặc chuỗi rỗng
+    if passwork:  
         passwork = passwork
     
     
@@ -87,9 +104,38 @@ def check_session_timeout():
             clear_user_session()
             return True
     return False
-def jointeam_function(user_id, team_id ):
+def Mail_jointeam_function(user_id ,email, team_id):
     """nhu ten"""
-    role_user = 'Member'
-    result= join_team(user_id, team_id ,role_user)
+    check_leader = check_role(user_id, team_id)
+    if not check_leader:
+        return check_leader
+    in4_team = get_team_by_id(team_id)
+    print("email___", email) 
+    get_name_user = get_user_by_email(email= email)
+    print("thong tin ", get_name_user)
+    print(type(get_name_user))
+    member_id = get_name_user.user_id
+    token_user = create_jwt_token(member_id, team_id)
     
-    return result 
+    if not in4_team:
+        return {"success": False, "error": "Team not found"}
+    team_name = in4_team.team_name
+    body = f"""
+    <p>Bạn được mời tham gia nhóm <strong>{team_name}</strong>.</p>
+    <p>Vui lòng nhấn nút dưới đây để tham gia nhóm:</p>
+    <a href="{token_user}" style="display:inline-block;padding:10px 20px;background-color:#1e90ff;color:white;text-decoration:none;border-radius:5px;">Tham gia nhóm</a>
+"""
+    subject = f"Tham gia nhóm {team_name}"
+    
+    return send_email_late_task(subject, email, body)
+
+def get_list_team_of_user(user_id): 
+    members = get_member(user_id)
+    result = []
+
+    for m in members:
+        team_list = get_team_by_id(m.team_id)  # team_list là dạng: [{'team_name': ..., 'team_id': ...}]
+        print(team_list) 
+        result.append(team_list)
+    print()
+    return result

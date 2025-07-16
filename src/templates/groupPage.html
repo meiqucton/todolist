@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Bảng công việc - {{ team_name }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/team.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notification2.css') }}">
+
+</head>
+<body>
+           {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+    <header class="page-header">
+        <div class="container header-container">
+            <div class="header-left">
+                <a href="/" class="logo">TaskList</a>
+                <span class="header-divider">/</span>
+                <div class="team-info">
+                    <h2>{{ team_name }}</h2>
+                    <span class="team-id-display">ID: {{team_id}}</span>
+                </div>
+            </div>
+            <a href="/team_list" class="btn btn-secondary"><span>👥</span> Các Nhóm</a>
+        </div>
+    </header>
+
+    <main class="container main-content">
+        <div class="left-column">
+            
+            {# Start of the conditional block for team leader #}
+            {% if check[role] == 'Leader' %}
+            <section class="card add-task-card">
+                <h3 class="card-title"><span>📝</span> Thêm Công Việc Mới</h3>
+                <form action="/create/team/task/{{team_id}}" method="POST">
+                    <div class="form-group">
+                        <label for="task_title">Tên công việc</label>
+                        <input type="text" id="task_title" name="task_title" placeholder="Ví dụ: Hoàn thành báo cáo quý 3" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="task_description">Mô tả</label>
+                        <textarea id="task_description" name="task_description" rows="3" placeholder="Thêm mô tả cụ thể..."></textarea>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="start_date">Ngày bắt đầu</label>
+                            <input type="text" id="start_date" name="start_date" class="datetime-picker" placeholder="Chọn ngày giờ" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="end_date">Hạn chót</label>
+                            <input type="text" id="end_date" name="end_date" class="datetime-picker" placeholder="Chọn ngày giờ" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><span>✅</span> Thêm Công Việc</button>
+                </form>
+            </section>
+            {% endif %}
+            {# End of the conditional block #}
+
+            <section class="card chat-card" data-team-id="{{team_id}}" data-username="{{user_name}}">
+                <h3 class="card-title"><span>💬</span> Thảo luận nhóm</h3>
+                <div class="chat-display">
+                    <ul id="messages"></ul>
+                </div>
+                <form id="form" class="chat-form">
+                    <input type="text" id="input" autocomplete="off" name="message" placeholder="Nhắn gì đó..." required>
+                    <button type="submit" class="btn-send" aria-label="Gửi">➤</button>
+                </form>
+            </section>
+        </div>
+
+        <div class="right-column">
+            <div class="task-list-container">
+                <div class="task-list-header">
+                    <h3 class="card-title">Danh sách công việc</h3>
+                    <nav class="filter-buttons">
+                        <button id="showAllTasks" class="active">Tất cả</button>
+                        <button id="showFinishedTasks">Đã hoàn thành</button>
+                        <button id="showUnfinishedTasks">Chưa hoàn thành</button>
+                    </nav>
+                </div>
+                
+                <div class="tasks-wrapper">
+                    {% for task in tasks %}
+                    <article class="task-card status-{{ task.status_task | lower | default('unfinished') }}" data-status="{{ task.status_task | lower | default('unfinished') }}">
+                        <div class="task-content">
+                            <h4>{{ task.task_title }}</h4>
+                            <p class="task-description">{{ task.task_description }}</p>
+                            <div class="task-footer">
+                                <span><strong>Bắt đầu:</strong> {{ task.start_date }}</span>
+                                <span><strong>Hết hạn:</strong> {{ task.end_date }}</span>
+                            </div>
+                        </div>
+                        <div class="task-meta">
+                            <span class="status-badge status-{{ task.status_task | lower | default('unfinished') }}">{{ task.status_task | replace('_', ' ') | title }}</span>
+                            <div class="task-actions">
+                                <form action="/update/task_team/{{team_id}}/{{task.task_id}}" method="POST">
+                                    {% if task.status_task | lower == 'finished' %}
+                                        <button type="submit" class="btn btn-secondary" name="action" value="retract">Thu hồi</button>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-success" name="action" value="complete">Hoàn thành</button>
+                                    {% endif %}
+                                </form>
+                            </div>
+                        </div>
+                    </article>
+                    {% else %}
+                    <div class="no-tasks card">
+                        <p>🎉 Hiện tại chưa có công việc nào. Thêm một công việc mới để bắt đầu!</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- CẤU HÌNH BAN ĐẦU ---
+            const socket = io(); // Kết nối tới server gốc
+            const chatCard = document.querySelector('.chat-card');
+            const teamId = chatCard.dataset.teamId;
+            const currentUser = chatCard.dataset.username;
+
+            // --- ELEMENTS ---
+            const form = document.getElementById('form');
+            const input = document.getElementById('input');
+            const messages = document.getElementById('messages');
+            const chatDisplay = document.querySelector('.chat-display');
+
+            flatpickr(".datetime-picker", {
+                enableTime: true,
+                dateFormat: "Y-m-d\\TH:i:S", // Đảm bảo định dạng ISO cho backend
+                time_24hr: true,
+            });
+
+            // --- LỌC TASK ---
+            const showAllBtn = document.getElementById('showAllTasks');
+            const showFinishedBtn = document.getElementById('showFinishedTasks');
+            const showUnfinishedBtn = document.getElementById('showUnfinishedTasks');
+            const taskCards = document.querySelectorAll('.task-card');
+            const filterButtons = document.querySelectorAll('.filter-buttons button');
+            
+            if(taskCards.length > 0) {
+                const style = document.createElement('style');
+                style.innerHTML = `.hidden { display: none !important; }`;
+                document.head.appendChild(style);
+            }
+
+            function filterTasks(status) {
+                taskCards.forEach(card => {
+                    if (status === 'all' || card.dataset.status === status) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            }
+
+            function setActiveButton(activeButton) {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                if(activeButton) activeButton.classList.add('active');
+            }
+            
+            if (showAllBtn) {
+                showAllBtn.addEventListener('click', () => { filterTasks('all'); setActiveButton(showAllBtn); });
+                showFinishedBtn.addEventListener('click', () => { filterTasks('finished'); setActiveButton(showFinishedBtn); });
+                showUnfinishedBtn.addEventListener('click', () => { filterTasks('unfinished'); setActiveButton(showUnfinishedBtn); });
+                
+                filterTasks('all');
+                setActiveButton(showAllBtn);
+            }
+
+            // --- CHAT ---
+            function addMessageToDisplay(data) {
+                if (!messages) return;
+                const item = document.createElement('li');
+                if (data.sender === currentUser) {
+                    item.classList.add('my-message');
+                }
+                item.innerHTML = `<strong>${data.sender}</strong><br><span>${data.message}</span>`;
+                messages.appendChild(item);
+                chatDisplay.scrollTop = chatDisplay.scrollHeight;
+            }
+
+            socket.on('connect', () => {
+                console.log('Đã kết nối, đang tham gia phòng:', teamId);
+                socket.emit('join', { team_id: teamId });
+                socket.emit('db_message', { team_id: teamId });
+            });
+
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    if (input.value) {
+                        socket.emit('chat_message', {
+                            team_id: teamId,
+                            message: input.value
+                        });
+                        input.value = '';
+                    }
+                });
+            }
+            
+            socket.on('receive_message', addMessageToDisplay);
+
+            socket.on('chat_history', (data) => {
+                if (messages) messages.innerHTML = '';
+                data.messages.forEach(addMessageToDisplay);
+            });
+        });
+    </script>
+</body>
+</html>

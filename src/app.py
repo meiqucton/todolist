@@ -2,6 +2,8 @@ from flask import Flask
 from config.database import Config, db
 from router.server import server_blueprint
 from dotenv import load_dotenv
+from socketio_instance import socketio
+
 from config.Gmail import init_mail
 import os
 from datetime import timedelta
@@ -31,10 +33,17 @@ def create_app():
         db.create_all()
 
     app.register_blueprint(server_blueprint)
+    socketio.init_app(app)
 
     return app
 
 # Chạy app
 if __name__ == "__main__":
+    print("⚡ Khởi tạo app...")
     app = create_app()
-    app.run(debug=True, port=3001)
+    
+    print("⚡ Import socket handlers...")
+    from controller.chat_controller import *  # nếu có lỗi ở đây, sẽ dừng tại đây
+    
+    print("⚡ Chạy socketio...")
+    socketio.run(app, debug=False, port=3001)

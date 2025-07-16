@@ -1,0 +1,36 @@
+/* CSS cho Flash Messages */
+.flashes {
+    list-style: none; /* Bỏ dấu chấm đầu dòng */
+    padding: 10px;
+    margin: 10px 0; /* Khoảng cách trên dưới */
+    border-radius: 5px; /* Bo tròn góc */
+    font-family: 'Montserrat', sans-serif; /* Đảm bảo font khớp với trang */
+}
+
+.flashes li {
+    padding: 12px 20px; /* Đệm bên trong */
+    margin-bottom: 8px; /* Khoảng cách giữa các thông báo */
+    border-radius: 5px;
+    font-weight: 500; /* Độ đậm của chữ */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Tạo đổ bóng nhẹ */
+    display: flex; /* Dùng flexbox để căn chỉnh */
+    align-items: center; /* Căn giữa theo chiều dọc */
+}
+
+.flashes li.success {
+    background-color: #d4edda; /* Nền xanh lá nhạt */
+    color: #155724; /* Chữ xanh đậm */
+    border: 1px solid #c3e6cb; /* Viền xanh lá */
+}
+
+.flashes li.error {
+    background-color: #f8d7da; /* Nền đỏ nhạt */
+    color: #721c24; /* Chữ đỏ đậm */
+    border: 1px solid #f5c6cb; /* Viền đỏ */
+}
+
+.flashes li.warning {
+    background-color: #fff3cd; /* Nền vàng nhạt */
+    color: #856404; /* Chữ vàng đậm */
+    border: 1px solid #ffeeba; /* Viền vàng */
+}

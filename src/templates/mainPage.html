@@ -1,178 +1,166 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>taskList - Task Management</title>
+    <title>taskList - Quản lý công việc & Tối ưu hiệu suất</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mainPage.css') }}">
-    <style>
-        .flash-messages {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 10001;
-            max-width: 400px;
-        }
-        .flash-message {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            animation: slideIn 0.3s ease-out;
-        }
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        .flash-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .flash-error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .flash-warning {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
-        }
-        .flash-info {
-            background-color: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Flash Messages -->
+    <header class="header">
+        <div class="container header__container">
+            <a href="#home" class="header__logo">taskList</a>
+            <nav class="header__nav">
+                <a href="#home">Trang Chính</a>
+                <a href="#about">Giới Thiệu</a>
+                <a href="#features">Tính Năng</a>
+                <a href="#contact">Liên Hệ</a>
+            </nav>
+       
+        </div>
+    </header>
+
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <div class="flash-messages">
                 {% for category, message in messages %}
                     <div class="flash-message flash-{{ category }}">
-                        {{ message }}
+                        <span>{{ message }}</span>
+                        <button class="flash-message__close" onclick="this.parentElement.remove()">&times;</button>
                     </div>
                 {% endfor %}
             </div>
         {% endif %}
     {% endwith %}
 
-    <!-- Thanh taskbar -->
-    <div class="taskbar"> 
-        <h1>taskList</h1>
-        <div class="taskbar-buttons">
-            <button id="Home">Trang Chính</button>
-            <button id="About">Giới Thiệu</button>
-            <button id="singer">Cá Nhân</button>
-            <button id="Team">Làm việc nhóm</button>
-            <button id="Contact">Liên Hệ</button>
+    <main>
+        <section id="home" class="hero">
+            <div class="container hero__container">
+                <div class="hero__content">
+                    <h1 class="hero__title">Quản lý công việc. <br>Tối ưu hiệu suất.</h1>
+                    <p class="hero__subtitle">Nền tảng tối ưu cho quản lý công việc cá nhân và cộng tác đội nhóm. Đơn giản, thông minh và hiệu quả.</p>
+                    <button class="btn btn--primary btn--large" onclick="showAuthModal(true)">Bắt đầu miễn phí</button>
+                </div>
+                <div class="hero__image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&q=80&w=2070" alt="Team Collaboration">
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <div class="container section__container">
+                <div class="section__header">
+                    <h2 class="section__title">Về taskList</h2>
+                    <p class="section__subtitle">taskList không chỉ là một danh sách công việc. Đó là không gian làm việc số của bạn.</p>
+                </div>
+                <div class="about-content">
+                    <div class="about-content__image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80&w=1974" alt="Office Meeting">
+                    </div>
+                    <div class="about-content__text">
+                        <h3>Đơn giản hóa quy trình làm việc</h3>
+                        <p>Chúng tôi tin rằng công cụ mạnh mẽ nhất là công cụ bạn thực sự muốn sử dụng. <strong>taskList</strong> được thiết kế với giao diện trực quan, giúp bạn:</p>
+                        <ul>
+                            <li>✔️ Lập kế hoạch và sắp xếp công việc một cách khoa học.</li>
+                            <li>✔️ Cộng tác và giao việc cho đội nhóm một cách liền mạch.</li>
+                            <li>✔️ Theo dõi tiến độ và đánh giá hiệu suất trực quan.</li>
+                        </ul>
+                        <p>Từ những dự án cá nhân đến các chiến dịch phức tạp của đội nhóm, taskList luôn là trợ thủ đắc lực của bạn.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="section section--bg-light">
+            <div class="container section__container">
+                <div class="section__header">
+                    <h2 class="section__title">Tính Năng Vượt Trội</h2>
+                    <p class="section__subtitle">Khám phá các công cụ giúp bạn và đội nhóm làm việc hiệu quả hơn mỗi ngày.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <img class="feature-card__image" src="https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?auto=format&fit=crop&q=80&w=2071" alt="Personal Task Management">
+                        <div class="feature-card__content">
+                            <h3 class="feature-card__title">Quản lý Cá Nhân</h3>
+                            <p>Tổ chức công việc cá nhân hiệu quả. Đặt deadline, mức độ ưu tiên và nhận thông báo nhắc nhở để không bao giờ bỏ lỡ nhiệm vụ quan trọng.</p>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                         <img class="feature-card__image" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=2070" alt="Team Collaboration Tools">
+                        <div class="feature-card__content">
+                            <h3 class="feature-card__title">Cộng Tác Nhóm</h3>
+                            <p>Giao việc, theo dõi tiến độ của từng thành viên, và thảo luận trực tiếp. Bảng điều khiển tổng quan giúp trưởng nhóm nắm bắt mọi thứ trong tầm tay.</p>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                         <img class="feature-card__image" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2015" alt="Performance Analytics">
+                        <div class="feature-card__content">
+                            <h3 class="feature-card__title">Báo Cáo & Thống Kê</h3>
+                            <p>Hệ thống báo cáo trực quan giúp bạn đánh giá hiệu suất của cá nhân và đội nhóm, từ đó đưa ra những điều chỉnh hợp lý để tối ưu hóa hiệu quả.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section">
+            <div class="container section__container--small">
+                <div class="section__header">
+                    <h2 class="section__title">Liên Hệ Với Chúng Tôi</h2>
+                    <p class="section__subtitle">Bạn có câu hỏi hoặc góp ý? Đội ngũ taskList luôn sẵn sàng lắng nghe và hỗ trợ bạn 24/7.</p>
+                </div>
+                <div class="contact-info">
+                     <p><strong>Email:</strong> <a href="mailto:support@taskList.com">support@taskList.com</a></p>
+                     <p><strong>Hotline:</strong> <a href="tel:0123456789">0123 456 789</a></p>
+                     <p><strong>Facebook:</strong> <a href="https://fb.com/taskListapp" target="_blank">fb.com/taskListapp</a></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="auth-modal" class="modal">
+        <div class="modal__content">
+            <button class="modal__close" onclick="hideAuthModal()">&times;</button>
+            <div class="auth-tabs">
+                <button id="login-tab" class="auth-tabs__btn active" onclick="switchForm('login')">Đăng Nhập</button>
+                <button id="register-tab" class="auth-tabs__btn" onclick="switchForm('register')">Đăng Ký</button>
+            </div>
+
+            <form id="login-form" class="auth-form active" action="/login" method="post">
+                <h3 class="auth-form__title">Chào mừng trở lại!</h3>
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" name="email" placeholder="Nhập email của bạn" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Mật khẩu</label>
+                    <input type="password" id="login-password" name="password" placeholder="Nhập mật khẩu" required>
+                </div>
+                <button type="submit" class="btn btn--primary btn--block">Đăng Nhập</button>
+            </form>
+
+            <form id="register-form" class="auth-form" action="/register" method="post">
+                <h3 class="auth-form__title">Tạo tài khoản mới</h3>
+                <div class="form-group">
+                    <label for="reg-username">Tên người dùng</label>
+                    <input type="text" id="reg-username" name="user_name" placeholder="Tên bạn muốn hiển thị" required>
+                </div>
+                <div class="form-group">
+                     <label for="reg-email">Email</label>
+                    <input type="email" id="reg-email" name="email" placeholder="Địa chỉ email hợp lệ" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Mật khẩu</label>
+                    <input type="password" id="reg-password" name="password" placeholder="Tối thiểu 8 ký tự" required>
+                </div>
+                <button type="submit" class="btn btn--primary btn--block">Đăng Ký</button>
+            </form>
         </div>
     </div>
 
-    <!-- Nội dung cuộn tới -->
-    <div class="container">
-    <section id="home">
-    <div class="banner">
-        <img src="{{ url_for('static', filename='images/116e168a-fd03-498e-a88a-a763c522e4bc.png') }}" alt="taskList Banner" class="banner-image">
-        <div class="banner-overlay">
-            <h1>Welcome to <span class="brand">taskList</span></h1>
-            <h2>The ultimate tool for personal task management and team collaboration.</h2>
-            <button class="btn-start" onclick="showLogin()">Bắt đầu ngay</button>
-        </div>
-    </div>
-
-<div id="login-modal" class="login-modal">
-  <div class="login-form-wrapper">
-    <span class="close-btn" onclick="hideLogin()">×</span>
-
-    <!-- Nút chuyển -->
-    <div class="tab-switcher">
-      <button id="btn-login" class="tab active" onclick="showLoginForm()">Đăng Nhập</button>
-      <button id="btn-register" class="tab" onclick="showRegisterForm()">Đăng Ký</button>
-    </div>
-
-    <!-- Form đăng nhập -->
-    <div id="form-login" class="form-section">
-      <h3>Đăng Nhập</h3>
-      <form action="/login" method="post">
-        <input type="text" name="email" placeholder="Tên đăng nhập" required>
-        <input type="password" name="password" placeholder="Mật khẩu" required>
-        <button type="submit">Đăng Nhập</button>
-      </form>
-    </div>
-
-    <!-- Form đăng ký -->
-    <div id="form-register" class="form-section" style="display: none;">
-      <h3>Đăng Ký</h3>
-      <form action="/register" method="post">
-        <input type="text" name="user_name" placeholder="Tên đăng nhập" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Mật khẩu" required>
-        <button type="submit">Đăng Ký</button>
-      </form>
-    </div>
-  </div>
-</div>
-
-
-</section>
-
-</section>
-
-    </section>
-
-
-        <section id="about">
-            <h2>Giới Thiệu</h2>
-            <p><strong>taskList</strong> là một ứng dụng quản lý công việc trực tuyến giúp bạn:</p>
-            <ul>
-                <li>Lập danh sách công việc cần làm</li>
-                <li>Giao nhiệm vụ cho thành viên trong nhóm</li>
-                <li>Theo dõi tiến độ và mức độ hoàn thành</li>
-                <li>Thống kê hiệu suất làm việc cá nhân và nhóm</li>
-            </ul>
-            <p>Giao diện đơn giản – hiệu quả – hỗ trợ làm việc từ xa và hợp tác nhóm dễ dàng.</p>
-        </section>
-
-        <section id="personal">
-            <h2>Cá Nhân</h2>
-            <p>Trong khu vực cá nhân, bạn có thể:</p>
-            <ul>
-                <li>Thêm, chỉnh sửa và xóa task cá nhân</li>
-                <li>Thiết lập deadline, ưu tiên và nhắc nhở</li>
-                <li>Xem tiến độ cá nhân theo biểu đồ hoặc danh sách</li>
-            </ul>
-            <p>Hệ thống điểm thưởng sẽ giúp bạn có thêm động lực hoàn thành công việc mỗi ngày.</p>
-        </section>
-
-        <section id="team">
-            <h2>Làm Việc Nhóm</h2>
-            <p>Phần làm việc nhóm hỗ trợ:</p>
-            <ul>
-                <li>Giao nhiệm vụ cụ thể cho từng thành viên</li>
-                <li>Bảng tổng quan giúp trưởng nhóm theo dõi toàn bộ tiến độ</li>
-                <li>Hệ thống chấm điểm nhóm – tạo môi trường thi đua và tăng hiệu quả</li>
-                <li>Bình luận, trao đổi trực tiếp dưới mỗi nhiệm vụ</li>
-                <li>Tạo ra 1 bảng thang đo hiệu suất làm việc của từng thành viên</li>
-            </ul>
-            <p>taskList giúp tăng cường sự phối hợp và nâng cao năng suất nhóm.</p>
-        </section>
-
-        <section id="contact">
-            <h2>Liên Hệ</h2>
-            <p>Nếu bạn có bất kỳ góp ý, câu hỏi hay cần hỗ trợ, vui lòng liên hệ:</p>
-            <ul>
-                <li>Email: support@taskList.com</li>
-                <li>Hotline: 0123 456 789</li>
-                <li>Facebook: fb.com/taskListapp</li>
-            </ul>
-            <p>Đội ngũ chúng tôi luôn sẵn sàng hỗ trợ bạn 24/7.</p>
-        </section>
-    </div>
     <script src="{{ url_for('static', filename='js/mainPage.js') }}"></script>
- 
 </body>
 </html>

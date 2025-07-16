@@ -17,11 +17,11 @@ class Membership(db.Model):
 
 def join_team(user_id, team_id ,role_user): 
     try: 
-        existing_membership = Membership.query.filter_by(user_id=user_id).first()
-        if existing_membership:
+        check_member = check_user_in_team(user_id, team_id)
+        if check_member['success']:
             return {
                 "success": False,
-                "message": f"Người dùng ID {user_id} đã tham gia team ID {existing_membership.team_id}. Không thể tạo team mới."
+                "error": "Bạn đã là thành viên của nhóm này rồi"
             }
         new_membership = Membership(
             user_id=user_id,
@@ -44,26 +44,56 @@ def join_team(user_id, team_id ,role_user):
             "error_detail": str(e)
         }
 def check_role(user_id, team_id): 
-    try: 
-        check_member = Membership.query.filter_by(user_id = user_id, team_id =team_id).first()
-        if check_member.role_user == 'Leader':
-            return{
-                "success": True
+    check_member = Membership.query.filter_by(user_id=user_id, team_id=team_id).first()
+    
+    if not check_member:
+        return {
+            "success": False,
+            "error": "Bạn không phải thành viên trong nhóm này."
+        }
+
+    role = check_member.role_user.lower()
+
+    if role == 'leader':
+        return {"success": True, "role": "Leader"}
+    elif role == 'member':
+        return {"success": True, "role": "Member"}
+    else:
+        return {
+            "success": False,
+            "error": "Bạn không có quyền truy cập."
+        }
+
+            
+def check_user_in_team(user_id, team_id):
+    try:
+        membership = Membership.query.filter(
+            and_(
+                Membership.user_id == user_id,
+                Membership.team_id == team_id
+            )
+        ).first()
+        if membership:
+            return {
+                "success": True,
+                "message": "Bạn đã tham gia vào nhóm này",
             }
-        else: 
-            return{
-                "success": False,
-                "error": f"Ban ko co quyen chinh sua"
-            }
-    except Exception as e:
-            db.session.rollback()
-            print("!!!!!!!!!!!!!!! LỖI KHI TẠO TEAM !!!!!!!!!!!!!!!")
-            import traceback
-            traceback.print_exc()
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        else:
             return {
                 "success": False,
-                "error_detail": str(e)
+                "message": "Bạn Không có quyền hạn truy cập vào nhóm này"
             }
-            
-    
+    except Exception as e:
+        db.session.rollback()
+        print("!!!!!!!!!!!!!!! LỖI KHI KIỂM TRA THÀNH VIÊN !!!!!!!!!!!!!!!")
+        import traceback
+        traceback.print_exc()
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        return {
+            "success": False,
+            "error_detail": str(e)
+        }
+def get_member(user_id):
+    check_membe = Membership.query.filter_by(user_id = user_id).all()
+    return check_membe
+

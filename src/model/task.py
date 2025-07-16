@@ -51,7 +51,6 @@ def get_list_task(user_id, team_id):
     if team_id is not None:
         query = Task.query.filter(
             and_(       #and là dùng để thêm đk
-                Task.user_id == user_id,
                 Task.team_id == team_id
             )
         )
@@ -59,7 +58,7 @@ def get_list_task(user_id, team_id):
         query = Task.query.filter(
             and_(
                 Task.user_id == user_id,
-                Task.team_id.is_(None)
+                Task.team_id == None 
             )
         )
         
@@ -77,7 +76,6 @@ def update_status(task_id, user_id, team_id):
             task = Task.query.filter(
                 and_(
                     Task.task_id == task_id,
-                    Task.user_id == user_id,
                     Task.team_id == team_id
                 )
             ).first()
@@ -92,21 +90,24 @@ def update_status(task_id, user_id, team_id):
             print(user)
         else:
             team = get_team_by_id(team_id)
+            
             if not team:
                 return {"success": False, "message": "Không tìm thấy team."}
-            
+            print("innnn",team)
+            old_total = team.total_point
+       
         if task.status_task == "unfinished":
             task.status_task = "finished"
             if task.team_id is None:  # Chỉ cộng điểm nếu task không thuộc team
                 user.total_point = (user.total_point or 0) + (task.point_task or 0)
             elif task.team_id is not None:  # Nếu task thuộc team, không cộng điểm cho user
-                team.total_point =  (team.total_point or 0) + (team.total_point or 0)       
+                team.total_point =  (old_total or 0) + (old_total or 0)       
         elif task.status_task == "finished":
             task.status_task = "unfinished"
             if task.team_id is None:  # Chỉ trừ điểm nếu task không thuộc team
                 user.total_point = max((user.total_point or 0) - (task.point_task or 0), 0)
             elif task.team_id is not None:  # Nếu task thuộc team, không trừ điểm cho user
-                team.total_point = max((team.total_point or 0) - (task.point_task or 0), 0)
+                team.total_point = max((old_total or 0) - (old_total or 0), 0)
         else:
             return {"success": False, "message": "Trạng thái task không hợp lệ. Chỉ chấp nhận 'unfinished' hoặc 'finished'."}
 
@@ -135,3 +136,38 @@ def update_status(task_id, user_id, team_id):
                     "error_detail": str(e)  
                 }
                 
+def count_task_by_status(user_id=None, team_id=None):
+    query = db.session.query(
+        Task.status_task,
+        db.func.count(Task.task_id).label("count")
+    )
+
+    if user_id:
+        query = query.filter(Task.user_id == user_id)
+    if team_id:
+        query = query.filter(Task.team_id == team_id)
+
+    query = query.group_by(Task.status_task)
+
+    results = query.all()
+
+    # Chuyển thành dict: {'finished': 5, 'unfinished': 2, ...}
+    return {status: count for status, count in results}
+
+def get_task_status_summary(user_id=None, team_id=None):
+    try:
+        stats = count_task_by_status(user_id=user_id, team_id=team_id)
+
+        finished = stats.get("finished", 0)
+        unfinished = stats.get("unfinished", 0)
+
+        return {
+            "success": True,
+            "finished": finished,
+            "unfinished": unfinished
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e)
+        }

@@ -1,0 +1,227 @@
+/* Tổng layout */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f6fa;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Sidebar */
+
+
+
+
+
+/* Hero section */
+.hero-section {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+.slider .slide {
+  height: 220px;
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0,0,0,0.3), rgba(0,0,0,0.1));
+}
+
+.hero-content {
+  position: absolute;
+  top: 50%;
+  left: 40px;
+  transform: translateY(-50%);
+  color: #fff;
+}
+
+.hero-content h1 {
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.hero-content p {
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.create-team-form {
+  display: flex;
+  gap: 10px;
+}
+
+.create-team-form input {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  width: 250px;
+}
+
+.create-team-form button {
+  padding: 8px 16px;
+  background-color: #2c3e50;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.create-team-form button:hover {
+  background-color: #1a252f;
+}
+
+/* List of teams */
+/* Lưới bố cục các nhóm */
+.list_team {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+/* Thẻ nhóm */
+.card_team {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card_team:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Header của nhóm */
+.card_team-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.team-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.team-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+.team_info {
+  display: flex;
+  flex-direction: column;
+}
+
+.team_info strong {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.team-meta {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Phần hành động */
+.card_team-actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.enter-button,
+.invite-button {
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0.6rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.enter-button:hover,
+.invite-button:hover {
+  background-color: #4338ca;
+}
+
+.invite-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.invite-form input[type="email"] {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease;
+}
+
+.invite-form input[type="email"]:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.icon-send {
+  width: 18px;
+  height: 18px;
+  margin-right: 0.4rem;
+}
+
+
+/* Empty state */
+.no-teams-message {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.no-teams-illustration {
+  width: 200px;
+  margin-bottom: 16px;
+}
+
+.create-first-team-button {
+  background-color: #2c3e50;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.create-first-team-button:hover {
+  background-color: #1a252f;
+}

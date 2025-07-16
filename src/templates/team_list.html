@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quảng Lý - taskList</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/notification.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/list.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+  </head>
+  <body>
+    <div class="dashboard-layout">
+      <aside class="sidebar">
+        <a href="#home" class="sidebar__logo">TaskList</a>
+        <nav class="sidebar__nav">
+          <a href="/home" class="sidebar__nav-link"><span>📊</span>Trang chủ</a>
+          <a href="/profile" class="sidebar__nav-link"
+            ><span>👤</span> Hồ sơ cá nhân</a
+          >
+          <a href="/tasks" class="sidebar__nav-link"
+            ><span>📋</span> Tổ chức công việc</a
+          >
+          <a href="/home" class="sidebar__nav-link active"
+            ><span>📊</span>Làm việc nhóm</a
+          >
+      
+        </nav>
+        <div class="sidebar__footer">
+          <a href="/logout" class="sidebar__nav-link"
+            ><span>🚪</span> Đăng xuất</a
+          >
+        </div>
+      </aside>
+
+      <main class="main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %}
+        <div class="flash-messages">
+          {% for category, message in messages %}
+          <div class="flash-message flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+        {% endif %} {% endwith %}
+        <div class="hero-section">
+          <div class="slider">
+            <div
+              class="slide"
+              style="
+                background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&h=400&q=80');
+              "
+            ></div>
+          </div>
+          <div class="hero-overlay"></div>
+          <div class="hero-content">
+            <h1>Không gian làm việc nhóm</h1>
+            <p>
+              Quản lý và theo dõi tiến độ các dự án của bạn một cách hiệu quả.
+            </p>
+            <form action="/createTeam" method="POST" class="create-team-form">
+              <input
+                type="text"
+                id="team_name"
+                name="team_name"
+                placeholder="Nhập tên nhóm của bạn..."
+                required
+              />
+              <button type="submit">Tạo nhóm mới</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="list_team">
+          {% for team in teams %}
+          <div class="card_team">
+            <div class="card_team-header">
+              <div class="team-avatar">
+                <img
+                  src="https://api.dicebear.com/7.x/bottts/svg?seed={{ team.team_name | urlencode }}"
+                  alt="{{ team.team_name }}"
+                />
+              </div>
+              <div class="team_info">
+                <strong>{{ team.team_name }}</strong>
+                <span class="team-meta"
+                  >ID team: {{ team.team_id | default(0) }}</span
+                >
+              </div>
+            </div>
+            <div class="card_team-actions">
+              <form action="/task_of_team/{{ team.team_id }}" method="GET">
+                <button type="submit" class="enter-button">Vào nhóm</button>
+              </form>
+              <div class="invite-container">
+                <form
+                  action="/invite_members/{{team.team_id}}"
+                  method="POST"
+                  class="invite-form"
+                >
+                  <input
+                    type="email"
+                    id="email_{{ team.team_id }}"
+                    name="email"
+                    placeholder="Email để mời thành viên..."
+                    required
+                  />
+                  <button type="submit" class="invite-button">
+                    <svg
+                      class="icon-send"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                    </svg>
+                    Mời
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <div class="no-teams-message">
+            <img
+              src="https://cdni.iconscout.com/illustration/premium/thumb/empty-list-7360215-5982859.png?f=webp"
+              alt="Chưa có nhóm"
+              class="no-teams-illustration"
+            />
+            <p>Bạn chưa tham gia nhóm nào.</p>
+            <button
+              class="create-first-team-button"
+              onclick="document.querySelector('.create-team-form input').focus();"
+            >
+              Tạo nhóm đầu tiên của bạn!
+            </button>
+          </div>
+          {% endfor %}
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

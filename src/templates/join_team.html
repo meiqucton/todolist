@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <title>Xác nhận Tham gia Nhóm</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        #message {
+            margin-top: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>Đang xác nhận lời mời tham gia nhóm...</h2>
+    <div id="message">Vui lòng chờ...</div>
+
+    <script>
+        // Token được Flask truyền vào template và render ra đây
+        const token = {{ token|tojson|safe }};
+
+        fetch("/api/accept-invite", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ token: token })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const msgDiv = document.getElementById("message");
+            if(data.success) {
+                msgDiv.textContent = data.message || "Bạn đã tham gia nhóm thành công!";
+                msgDiv.style.color = "green";
+            } else {
+                msgDiv.textContent = data.error || "Bạn đã tham gia nhóm này rồi ";
+                msgDiv.style.color = "red";
+            }
+        })
+        .catch(() => {
+            const msgDiv = document.getElementById("message");
+            msgDiv.textContent = "Lỗi kết nối đến server.";
+            msgDiv.style.color = "red";
+        });
+    </script>
+</body>
+</html>
