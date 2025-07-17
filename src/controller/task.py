@@ -2,7 +2,7 @@ from flask import session
 import math
 import uuid
 from datetime import datetime
-from model.task import create_task, get_list_task, update_status,count_task_by_status
+from model.task import create_task, get_list_task, update_status,count_task_by_status, update_task
 from model.member import check_role
 
 def task_to_dict(task):
@@ -19,7 +19,6 @@ def task_to_dict(task):
     }
 def create_task_function(user_id, team_id, task_title, task_description, start_date, end_date, status_task=None):
         try:
-            print(f"[DEBUG] user_id={user_id}, team_id={team_id}, title={task_title}, desc={task_description}, start={start_date}, end={end_date}, status={status_task}")
       
                 
             if not task_title or not start_date or not end_date:
@@ -115,3 +114,35 @@ def get_task_status_summary(user_id=None, team_id=None):
             "success": False,
             "error": str(e)
         }
+def update_task_logic(task_id, task_title, task_description, start_date, end_date):
+    """
+    Hàm logic để xử lý việc cập nhật task, bám sát cấu trúc bạn cung cấp.
+    """
+    try:
+        if not task_title or not start_date or not end_date:
+            return {"success": False, "error": "Tiêu đề, ngày bắt đầu và kết thúc không được để trống."}
+
+     
+        if start_date > end_date:
+            return {"success": False, "error": "Ngày kết thúc không thể sớm hơn ngày bắt đầu."}
+
+        total_minutes = int((end_date - start_date).total_seconds() / 60)
+        point_task = max(1, total_minutes // 30)
+
+
+        kwargs_to_update = {
+            'task_title': task_title,
+            'task_description': task_description,
+            'start_date': start_date,
+            'end_date': end_date,
+            'point_task': point_task
+        }
+
+        result = update_task(task_id, **kwargs_to_update)
+        
+        return result
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return {"success": False, "error": f"Đã có lỗi xảy ra trong logic controller: {str(e)}"}

@@ -1,61 +1,41 @@
 /* static/css/team.css */
 
-/* --- BIẾN TOÀN CỤC VÀ THIẾT LẬP CƠ BẢN --- */
+/* --- BIẾN MÀU VÀ THIẾT LẬP CHUNG --- */
 :root {
-    --primary-color: #3b82f6; /* Xanh dương */
-    --primary-hover: #2563eb;
-    --secondary-color: #6b7280; /* Xám */
-    --secondary-hover: #4b5563;
-    --success-color: #10b981; /* Xanh lá */
-    --success-hover: #059669;
-    
-    --bg-color: #f3f4f6; /* Nền xám rất nhạt */
-    --card-bg: #ffffff;
-    --border-color: #e5e7eb;
-    --text-primary: #1f2937;
-    --text-secondary: #6b7280;
-    --text-light: #ffffff;
-    
-    --status-finished-bg: #d1fae5;
-    --status-finished-text: #065f46;
-    --status-unfinished-bg: #feF3c7;
-    --status-unfinished-text: #92400e;
-
-    --chat-bg-self: #dbeafe; /* Nền tin nhắn của bạn */
-    --chat-bg-other: #f3f4f6; /* Nền tin nhắn của người khác */
-
-    --border-radius: 8px;
-    --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.05);
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+    --primary-color: #4a90e2; /* Xanh dương hiện đại */
+    --primary-hover-color: #357abd;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --secondary-color: #6c757d;
+    --background-color: #f4f7f9; /* Nền xám rất nhạt */
+    --card-background-color: #ffffff;
+    --text-primary-color: #2d3748;
+    --text-secondary-color: #718096;
+    --border-color: #e2e8f0;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --font-family: 'Inter', sans-serif;
 }
 
 body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-primary);
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-primary-color);
+    margin: 0;
     line-height: 1.6;
 }
 
 .container {
+    width: 90%;
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 1.5rem;
 }
 
 /* --- HEADER --- */
 .page-header {
-    background-color: var(--card-bg);
+    background-color: var(--card-background-color);
     padding: 1rem 0;
     border-bottom: 1px solid var(--border-color);
-    box-shadow: var(--box-shadow);
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .header-container {
@@ -83,59 +63,53 @@ body {
 }
 
 .team-info h2 {
-    font-size: 1.25rem;
     margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
 }
 
-.team-id-display {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-}
-
-/* --- LAYOUT CHÍNH --- */
+/* --- BỐ CỤC CHÍNH --- */
 .main-content {
     display: flex;
     gap: 2rem;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-    align-items: flex-start;
+    padding: 2rem 0;
 }
 
 .left-column {
-    flex: 1;
-    min-width: 350px;
+    width: 35%;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     gap: 2rem;
 }
 
 .right-column {
-    flex: 2;
-    min-width: 0; /* Important for flexbox shrinking */
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
-/* --- COMPONENT: CARD --- */
+/* --- CARD CHUNG (BASE STYLE) --- */
 .card {
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
+    background-color: var(--card-background-color);
+    border-radius: 8px;
     padding: 1.5rem;
-    transition: box-shadow 0.3s ease;
-}
-.card:hover {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
 }
 
 .card-title {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
     font-size: 1.2rem;
     font-weight: 600;
-    margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
     gap: 0.75rem;
 }
 
-/* --- COMPONENT: FORM & BUTTON --- */
+/* --- FORM & BUTTONS --- */
 .form-group {
     margin-bottom: 1rem;
 }
@@ -152,177 +126,232 @@ textarea {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
+    border-radius: 6px;
     font-size: 1rem;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    font-family: var(--font-family);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box; /* Quan trọng */
 }
 
 input[type="text"]:focus,
 textarea:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
 
 textarea {
     resize: vertical;
-    min-height: 80px;
 }
 
 .form-grid {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 1rem;
 }
 
-.btn {
+/* Base button style */
+.btn, button[type="submit"] {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    border-radius: var(--border-radius);
     border: none;
+    border-radius: 6px;
+    font-family: var(--font-family);
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
     text-decoration: none;
-    transition: background-color 0.3s ease, transform 0.1s ease;
-}
-.btn:hover {
-    transform: translateY(-1px);
 }
 
-.btn-primary {
-    background-color: var(--primary-color);
-    color: var(--text-light);
-    width: 100%;
+.btn:hover, button[type="submit"]:hover {
+    transform: translateY(-2px);
 }
-.btn-primary:hover {
-    background-color: var(--primary-hover);
+
+.btn-primary,
+.add-task-card button[type="submit"] {
+    background-color: var(--primary-color);
+    color: white;
+}
+.btn-primary:hover,
+.add-task-card button[type="submit"]:hover {
+    background-color: var(--primary-hover-color);
 }
 
 .btn-secondary {
-    background-color: var(--secondary-color);
-    color: var(--text-light);
+    background-color: #e2e8f0;
+    color: var(--text-primary-color);
 }
 .btn-secondary:hover {
-    background-color: var(--secondary-hover);
+    background-color: #cbd5e0;
 }
 
 .btn-success {
     background-color: var(--success-color);
-    color: var(--text-light);
+    color: white;
 }
 .btn-success:hover {
-    background-color: var(--success-hover);
+    background-color: #218838;
 }
 
+.delBut {
+    background-color: var(--danger-color);
+    color: white;
+    padding: 0.5rem 1rem; /* Nút xóa nhỏ hơn */
+    font-size: 0.9rem;
+}
+.delBut:hover {
+    background-color: #c82333;
+}
 
-/* --- KHU VỰC CHAT --- */
-.chat-display {
-    height: 350px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    padding: 1rem;
-    margin-bottom: 1rem;
+/* --- CỘT TRÁI: CHAT & GET REPORT --- */
+.chat-card .chat-display {
+    height: 300px;
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    background-color: #f8fafc; /* Nền chat hơi khác biệt */
 }
 
 #messages {
     list-style-type: none;
+    padding: 0;
+    margin: 0;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
 }
 
 #messages li {
-    padding: 0.75rem 1rem;
-    border-radius: var(--border-radius);
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
     max-width: 80%;
-    word-wrap: break-word;
 }
-
 #messages li strong {
     display: block;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     margin-bottom: 0.25rem;
+    color: var(--text-primary-color);
 }
-
-/* Tin nhắn của người khác */
-#messages li {
-    background-color: var(--chat-bg-other);
-    align-self: flex-start;
-}
-
-/* Tin nhắn của mình */
 #messages li.my-message {
-    background-color: var(--chat-bg-self);
+    background-color: var(--primary-color);
+    color: white;
     align-self: flex-end;
-    color: #1e40af;
+    border-bottom-right-radius: 2px;
+}
+#messages li.my-message strong { color: white; opacity: 0.8; }
+#messages li.other-message {
+    background-color: #e2e8f0;
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
 }
 
 .chat-form {
     display: flex;
-    gap: 0.5rem;
 }
-
-.chat-form input {
-    flex-grow: 1;
+.chat-form #input {
+    border-right: none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
-
-.btn-send {
+.chat-form .btn-send {
     background-color: var(--primary-color);
-    color: var(--text-light);
+    color: white;
     border: none;
-    border-radius: var(--border-radius);
-    width: 50px;
-    font-size: 1.5rem;
+    padding: 0 1.25rem;
+    border-radius: 0 6px 6px 0;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    font-size: 1.5rem;
+    transition: background-color 0.2s;
 }
-.btn-send:hover {
-    background-color: var(--primary-hover);
+.chat-form .btn-send:hover {
+    background-color: var(--primary-hover-color);
+}
+
+.get_report button {
+    width: 100%;
+    background-color: var(--secondary-color);
+    color: white;
+}
+.get_report button:hover {
+    background-color: #5a6268;
 }
 
 
-/* --- DANH SÁCH CÔNG VIỆC --- */
-.task-list-container {
+/* --- CỘT PHẢI: THỐNG KÊ & DANH SÁCH TASK --- */
+.team-stats-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+}
+
+.stats-card .chart-container {
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    align-items: center;
+    gap: 2rem;
 }
+
+.task-pie-chart {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-image: var(--chart-gradient, conic-gradient(#e2e8f0 100%, #e2e8f0 0));
+}
+
+.chart-legend .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.legend-green { background-color: var(--success-color); }
+.legend-red { background-color: var(--danger-color); }
+.legend-item p { margin: 0; color: var(--text-secondary-color); font-size: 0.9rem; }
+.legend-item strong { font-weight: 600; }
+
+
+.points-card .points-display {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-align: center;
+}
+.points-card .card-title {
+    text-align: center;
+    display: block;
+}
+
 
 .task-list-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 0.5rem;
+    margin-bottom: 1rem;
 }
-
-.filter-buttons {
-    display: flex;
-    gap: 0.5rem;
-}
-
 .filter-buttons button {
-    background-color: transparent;
+    background: none;
     border: 1px solid var(--border-color);
     padding: 0.5rem 1rem;
-    border-radius: 20px;
+    border-radius: 6px;
     cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    margin-left: 0.5rem;
+    transition: background-color 0.2s, color 0.2s;
 }
-
+.filter-buttons button.active,
 .filter-buttons button:hover {
-    background-color: #e5e7eb;
-}
-
-.filter-buttons button.active {
     background-color: var(--primary-color);
-    color: var(--text-light);
+    color: white;
     border-color: var(--primary-color);
 }
 
@@ -335,98 +364,212 @@ textarea {
 .task-card {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1.25rem;
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    border-left: 4px solid;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    transition: box-shadow 0.2s;
+    border-left: 5px solid; /* Vạch màu trạng thái */
+}
+.task-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.task-card.status-finished {
-    border-left-color: var(--success-color);
-}
-.task-card.status-unfinished {
-    border-left-color: var(--status-unfinished-text);
-}
+/* Màu viền trái cho trạng thái task */
+.task-card.status-finished { border-left-color: var(--success-color); }
+.task-card.status-unfinished { border-left-color: var(--danger-color); }
 
-.task-card h4 {
-    margin: 0 0 0.5rem 0;
-}
+.task-content h4 { margin: 0 0 0.5rem; font-size: 1.1rem; }
+.task-content .task-description { margin: 0 0 1rem; color: var(--text-secondary-color); }
+.task-footer { font-size: 0.8rem; color: var(--text-secondary-color); }
+.task-footer span { margin-right: 1.5rem; }
 
-.task-description {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    margin-bottom: 1rem;
-}
-
-.task-footer {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    display: flex;
-    gap: 1rem;
-}
 
 .task-meta {
     text-align: right;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.75rem;
     flex-shrink: 0;
+    margin-left: 1.5rem;
 }
-
 .status-badge {
     display: inline-block;
     padding: 0.25rem 0.75rem;
     border-radius: 12px;
     font-size: 0.8rem;
     font-weight: 600;
-    text-transform: capitalize;
+    color: white;
+    margin-bottom: 0.75rem;
+}
+.status-badge.status-finished { background-color: var(--success-color); }
+.status-badge.status-unfinished { background-color: var(--danger-color); }
+
+.task-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+.task-actions form { margin: 0; }
+.task-actions .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
 }
 
-.status-badge.status-finished {
-    background-color: var(--status-finished-bg);
-    color: var(--status-finished-text);
-}
-
-.status-badge.status-unfinished {
-    background-color: var(--status-unfinished-bg);
-    color: var(--status-unfinished-text);
-}
 
 .no-tasks {
     text-align: center;
-    padding: 3rem 1.5rem;
-    border: 2px dashed var(--border-color);
-}
-.no-tasks p {
-    font-size: 1.1rem;
-    color: var(--text-secondary);
+    padding: 3rem;
+    color: var(--text-secondary-color);
 }
 
-.hidden {
-    display: none !important;
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 1200px) {
+    .team-stats-container {
+        grid-template-columns: 1fr; /* Stack stats cards on smaller screens */
+    }
 }
 
-/* --- THIẾT KẾ ĐÁP ỨNG (RESPONSIVE) --- */
 @media (max-width: 992px) {
     .main-content {
-        flex-direction: column;
+        flex-direction: column; /* Stack left and right columns */
     }
-    .task-list-header {
+    .left-column, .right-column {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-container, .task-list-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .stats-card .chart-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .task-card {
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
     }
+
+    .task-meta {
+        align-self: flex-start;
+        text-align: left;
+        margin-left: 0;
+    }
 }
-.chart-legend {
-  margin-top: 10px;
-  text-align: center;
-  font-size: 14px;
+/* CSS for Modal */
+.modal {
+    display: none; /* Ẩn mặc định */
+    position: fixed; /* Ở yên tại chỗ khi cuộn trang */
+    z-index: 1000; /* Hiển thị trên cùng */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6); /* Nền đen mờ */
 }
 
-.chart-legend p {
-  margin: 4px 0;
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* Canh giữa theo chiều dọc và ngang */
+    padding: 2rem;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px; /* Chiều rộng tối đa */
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: animatetop 0.4s;
 }
+
+/* Animation cho modal */
+@keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1}
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.modal-header h2 {
+    margin: 0;
+}
+
+.close-button {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Sắp xếp các nút hành động */
+.task-actions-group {
+    display: flex;
+    gap: 0.5rem; /* Khoảng cách giữa các nút */
+    align-items: center;
+}
+
+/* CSS cho các nút mới */
+.btn.btn-edit { background-color: #ffc107; color: black; }
+.btn.btn-delete { background-color: #dc3545; color: white; }
+  .modal {
+            display: none; 
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            animation: fadeIn 0.3s;
+        }
+        .modal-content {
+            background-color: #2c2f33;
+            color: #fff;
+            margin: 10% auto;
+            padding: 25px;
+            border: 1px solid #4f545c;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 8px;
+            position: relative;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-close-button {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .modal-close-button:hover,
+        .modal-close-button:focus {
+            color: #fff;
+        }
+        .modal .form-group label {
+            color: #b9bbbe;
+        }
+        .modal .form-group input, .modal .form-group textarea {
+            background-color: #40444b;
+            color: #fff;
+            border: 1px solid #5c6067;
+        }

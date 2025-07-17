@@ -1,5 +1,7 @@
 from flask import Blueprint, request, render_template, session, redirect, url_for, flash, jsonify
 import os
+import json
+
 from datetime import datetime
 import jwt
 from pyvi import ViTokenizer
@@ -22,9 +24,13 @@ from controller.task import(
     create_task_function,
     get_task_function,
     update_Status_task_function,
-    get_task_status_summary
+    get_task_status_summary, 
+    update_task_logic
+    
 )
-
+from model.corehere import(
+    get_db_for_AI
+)
 from model.team import( 
     acces_join_team, get_team_by_id
     )
@@ -32,8 +38,11 @@ from model.redisModel import(
     get_his_mes
 )
 from model.member import(
-    check_role
+    check_role, 
 ) 
+from model.task import(
+    get_list_task, getreport, delete_task
+)
 load_dotenv()
 
 from controller.team import(create_team_function)
@@ -187,6 +196,100 @@ def team_list():
   
     return render_template("team_list.html", teams=teams)
 #TASK
+@server_blueprint.route("/update_task/<int:task_id>", methods=["POST"])
+def update_task(task_id):
+    try:
+   
+        task_title = request.form.get("task_title")
+        task_description = request.form.get("task_description")
+        start_str = request.form.get("start_date")
+        end_str = request.form.get("end_date")
+
+        if not task_title or not start_str or not end_str:
+            flash("Vui lòng điền đầy đủ thông tin bắt buộc.", "error")
+            return redirect(url_for("server.home"))
+
+        # Chuyển đổi string sang datetime an toàn
+        start_dt = datetime.fromisoformat(start_str)
+        end_dt = datetime.fromisoformat(end_str) # Đổi tên biến để nhất quán
+
+        # Tokenize (logic này của bạn đã đúng)
+        task_title_ = ViTokenizer.tokenize(task_title)
+        task_description_ = ViTokenizer.tokenize(task_description)
+        
+        # Gọi hàm logic và TRUYỀN task_id vào
+        result = update_task_logic(
+            task_id=task_id,  # <-- SỬA LỖI QUAN TRỌNG NHẤT
+            task_title=task_title_,
+            task_description=task_description_,
+            start_date=start_dt,
+            end_date=end_dt
+        )
+
+        if result and result.get("success"):
+            flash("Cập nhật task thành công!", "success")
+        else:
+            flash(f"Lỗi cập nhật task: {result.get('error', 'Không rõ lỗi')}", "error")
+
+    except ValueError:
+        flash(f"Định dạng ngày tháng không hợp lệ. Vui lòng kiểm tra lại.", "error")
+    except Exception as e:
+        flash(f"Lỗi không mong muốn: {str(e)}", "error")
+
+    # LUÔN redirect ở cuối cùng
+    return redirect(url_for("server.home"))
+
+
+@server_blueprint.route("/update_task/<int:team_id>/<int:task_id>", methods=["POST"])
+def edit_task(team_id,task_id):
+    try:
+   
+        task_title = request.form.get("task_title")
+        task_description = request.form.get("task_description")
+        start_str = request.form.get("start_date")
+        end_str = request.form.get("end_date")
+
+        if not task_title or not start_str or not end_str:
+            flash("Vui lòng điền đầy đủ thông tin bắt buộc.", "error")
+            return redirect(url_for("server.home"))
+
+        # Chuyển đổi string sang datetime an toàn
+        start_dt = datetime.fromisoformat(start_str)
+        end_dt = datetime.fromisoformat(end_str) # Đổi tên biến để nhất quán
+
+        # Tokenize (logic này của bạn đã đúng)
+        task_title_ = ViTokenizer.tokenize(task_title)
+        task_description_ = ViTokenizer.tokenize(task_description)
+        
+        # Gọi hàm logic và TRUYỀN task_id vào
+        result = update_task_logic(
+            task_id=task_id,  # <-- SỬA LỖI QUAN TRỌNG NHẤT
+            task_title=task_title_,
+            task_description=task_description_,
+            start_date=start_dt,
+            end_date=end_dt
+        )
+
+        if result and result.get("success"):
+            flash("Cập nhật task thành công!", "success")
+        else:
+            flash(f"Lỗi cập nhật task: {result.get('error', 'Không rõ lỗi')}", "error")
+
+    except ValueError:
+        flash(f"Định dạng ngày tháng không hợp lệ. Vui lòng kiểm tra lại.", "error")
+    except Exception as e:
+        flash(f"Lỗi không mong muốn: {str(e)}", "error")
+
+    # LUÔN redirect ở cuối cùng
+    return redirect(url_for("server.get_task_task", team_id=team_id))
+@server_blueprint.route("/delete_user/<int:task_id>", methods=["POST"])
+def deletask_user(task_id):
+    delete_task(task_id= task_id)
+    return redirect(url_for("server.home"))
+@server_blueprint.route("/delete/<int:team_id>/<int:task_id>", methods=["POST"])
+def deletask(team_id, task_id):
+    delete_task(task_id= task_id)
+    return redirect(url_for("server.get_task_task", team_id=team_id))
 
 @server_blueprint.route("/create/task", methods=["POST"])
 def create_task():
@@ -272,26 +375,28 @@ def get_task_task(team_id):
     user_id = session.get("user_id")
     user_name = session.get("user_name")
     check_member = check_role(user_id, team_id )
-    
+    point = get_task_status_summary(team_id= team_id)
     team_object = get_team_by_id(team_id=team_id)
 
     if not team_object:
         flash("Team không tồn tại.", "danger")
         return redirect(url_for("server.team_list"))
-
+    
     result = get_task_function(user_id, team_id)
     task_list = []
     if result and result.get("success") and "data" in result:
         task_list = result["data"]
     
-    
+    print("check_",check_member)
     return render_template(
         "groupPage.html",
         tasks=task_list,    
         team_name=team_object.team_name,
+        team_total_point = team_object.total_point,
         team_id=team_id,
         user_name=user_name,
-        check = check_member
+        check = check_member,
+        point = point
     )
 #TEAM
 
@@ -388,3 +493,23 @@ def get_db_chat_by_redis(room_id):
         return jsonify(chat)
     else:
         return jsonify({'error': 'Không tìm thấy cuộc trò chuyện'}), 404
+@server_blueprint.route("/get_task_team/<int:team_id>", methods=["GET"])
+def get_taskTeam(team_id):
+    if not is_user_logged_in():
+        flash("Vui lòng đăng nhập để truy cập trang này.", "warning")
+        return redirect(url_for("server.hello"))
+    days_int = 7
+    user_info = get_current_user_info()
+    email = user_info['email']
+    print(email)
+    result = getreport(team_id=team_id, days_filter=days_int)
+
+   
+    tasks_as_dicts = [task.to_dict() for task in result]
+    db_json = json.dumps(tasks_as_dicts)
+    AI_respond = get_db_for_AI(db_json)
+    AI_respond = AI_respond.text
+    subject = f"Báo cáo danh sách số lượng task đã hoàn thành trong {days_int} ngày vừa qua"
+    send_email_late_task(subject, email = email, body= AI_respond)
+    return redirect(url_for("server.get_task_task", team_id=team_id))
+

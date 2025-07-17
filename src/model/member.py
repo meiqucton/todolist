@@ -4,6 +4,8 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 from config.database import db
 # from model.team import Team
+from model.user import get_user_by_id
+
 class Membership(db.Model): 
     __tablename__ = 'membership'  
 

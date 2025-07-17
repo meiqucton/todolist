@@ -1,48 +1,39 @@
+/* static/css/notification2.css */
+
 .flash-messages {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  max-width: 350px;
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .flash-message {
-  padding: 16px 20px;
-  border-radius: 10px;
-  color: #fff;
-  font-weight: 500;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  animation: fadeInSlide 0.4s ease-out;
+    padding: 15px 20px;
+    border-radius: 8px;
+    color: #fff;
+    min-width: 250px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    font-weight: 500;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
 }
 
-/* Các kiểu loại message */
 .flash-success {
-  background-color: #2ecc71; /* xanh lá */
+    background-color: #28a745; /* Green */
 }
 
 .flash-error {
-  background-color: #e74c3c; /* đỏ */
-}
-
-.flash-warning {
-  background-color: #f39c12; /* cam */
+    background-color: #dc3545; /* Red */
 }
 
 .flash-info {
-  background-color: #3498db; /* xanh dương */
+    background-color: #17a2b8; /* Teal */
 }
 
-/* Hiệu ứng xuất hiện */
-@keyframes fadeInSlide {
-  0% {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.flash-warning {
+    background-color: #ffc107; /* Yellow */
+    color: #212529;
 }

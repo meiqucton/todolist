@@ -20,9 +20,9 @@ def send_email_late_task(subject, email, body):
                             <img src="{image_url}" alt="Thông báo" style="max-width: 150px; margin-bottom: 20px;" />
                         </div>
                         <h2 style="color: #e74c3c; margin-top: 0;">📢 THÔNG BÁO</h2>
-                        <p style="font-size: 16px; color: #333333; line-height: 1.5;">
-                            {body}
-                        </p>
+                        
+                        <p style="font-size: 16px; color: #333333; line-height: 1.5; white-space: pre-wrap;">{body}</p>
+                        
                         <p style="margin-top: 30px; font-size: 12px; color: #999999;">Đây là email tự động. Vui lòng không phản hồi.</p>
                     </div>
                 </body>
