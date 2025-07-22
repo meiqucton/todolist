@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime,and_, or_, update
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship,joinedload
 
 from datetime import datetime
 from config.database import db
@@ -99,3 +99,33 @@ def get_member(user_id):
     check_membe = Membership.query.filter_by(user_id = user_id).all()
     return check_membe
 
+def get_member_team(team_id):
+    """
+    Retrieves a structured list of members for a given team.
+    This version is more efficient as it pre-loads user data to avoid multiple queries.
+    """
+    try:
+        # Use joinedload to fetch members and their related user data in a single, efficient query.
+        # This prevents the "N+1 query problem" from calling the database in a loop.
+        memberships = Membership.query.options(
+            joinedload(Membership.user)
+        ).filter_by(team_id=team_id).all()
+
+        members_list = []
+        for member in memberships:
+            # Check that the related user exists to prevent errors
+            if member.user:
+                # Create a dictionary with the correct syntax: "key": value
+                member_data = {
+                    "user_id": member.user_id,
+                    "user_name": member.user.user_name, # Assumes your User model has a 'user_name' field
+                    "role": member.role_user,
+                    "team_id": member.team_id
+                }
+                members_list.append(member_data)
+
+        return members_list
+
+    except Exception as e:
+        print(f"An error occurred while fetching team members: {e}")
+        return []

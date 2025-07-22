@@ -38,11 +38,12 @@ from model.redisModel import(
     get_his_mes
 )
 from model.member import(
-    check_role, 
+    check_role,get_member_team
 ) 
 from model.task import(
     get_list_task, getreport, delete_task
 )
+
 load_dotenv()
 
 from controller.team import(create_team_function)
@@ -374,6 +375,7 @@ def get_task_task(team_id):
 
     user_id = session.get("user_id")
     user_name = session.get("user_name")
+    get_member = get_member_team(team_id= team_id)
     check_member = check_role(user_id, team_id )
     point = get_task_status_summary(team_id= team_id)
     team_object = get_team_by_id(team_id=team_id)
@@ -396,7 +398,8 @@ def get_task_task(team_id):
         team_id=team_id,
         user_name=user_name,
         check = check_member,
-        point = point
+        point = point,
+        member = get_member
     )
 #TEAM
 
@@ -512,4 +515,10 @@ def get_taskTeam(team_id):
     subject = f"Báo cáo danh sách số lượng task đã hoàn thành trong {days_int} ngày vừa qua"
     send_email_late_task(subject, email = email, body= AI_respond)
     return redirect(url_for("server.get_task_task", team_id=team_id))
+
+@server_blueprint.route("/member_of_team/<int:team_id>", methods=["GET"])
+def member_get(team_id):
+    resulut = get_member_team(team_id)
+    print(resulut)
+    return resulut
 

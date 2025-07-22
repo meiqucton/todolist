@@ -15,7 +15,7 @@ def task_to_dict(task):
         "start_date": task.start_date.strftime("%Y-%m-%d %H:%M:%S") if task.start_date else None,
         "end_date": task.end_date.strftime("%Y-%m-%d %H:%M:%S") if task.end_date else None,
         "status_task": task.status_task,
-        "point_task": task.point_task
+        "point_task": task.point_task,
     }
 def create_task_function(user_id, team_id, task_title, task_description, start_date, end_date, status_task=None):
         try:
@@ -146,3 +146,6 @@ def update_task_logic(task_id, task_title, task_description, start_date, end_dat
         import traceback
         traceback.print_exc()
         return {"success": False, "error": f"Đã có lỗi xảy ra trong logic controller: {str(e)}"}
+def giao_task_user(team_id, user_id): 
+    
+    return 

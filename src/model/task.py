@@ -278,3 +278,17 @@ def update_task(task_id, **kwargs):
             "message": "Lỗi hệ thống khi cập nhật task.",
             "error_detail": str(e)
         }
+def giao_task_function(task_id, user_id):
+    try: 
+        task = Task.query.get(task_id) 
+        
+        return
+    except Exception as e:
+        db.session.rollback()
+        import traceback
+        traceback.print_exc()
+        return {
+            "success": False,
+            "message": "Lỗi hệ thống khi cập nhật task.",
+            "error_detail": str(e)
+        }

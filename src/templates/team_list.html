@@ -55,14 +55,7 @@
       </aside>
 
       <main class="main-content">
-        {% with messages = get_flashed_messages(with_categories=true) %} {% if
-        messages %}
-        <div class="flash-messages">
-          {% for category, message in messages %}
-          <div class="flash-message flash-{{ category }}">{{ message }}</div>
-          {% endfor %}
-        </div>
-        {% endif %} {% endwith %}
+
         <div class="hero-section">
           <div class="slider">
             <div
@@ -141,20 +134,7 @@
             </div>
           </div>
           {% else %}
-          <div class="no-teams-message">
-            <img
-              src="https://cdni.iconscout.com/illustration/premium/thumb/empty-list-7360215-5982859.png?f=webp"
-              alt="Chưa có nhóm"
-              class="no-teams-illustration"
-            />
-            <p>Bạn chưa tham gia nhóm nào.</p>
-            <button
-              class="create-first-team-button"
-              onclick="document.querySelector('.create-team-form input').focus();"
-            >
-              Tạo nhóm đầu tiên của bạn!
-            </button>
-          </div>
+          
           {% endfor %}
         </div>
       </main>
